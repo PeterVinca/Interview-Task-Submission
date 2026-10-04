@@ -5,9 +5,9 @@ using CustomerRequestProcessing.Services.Helpers;
 
 namespace CustomerRequestProcessing.Services;
 
-internal class DataProcessor
+public class DataProcessor
 {
-    private readonly Logger _logger;
+    private readonly ILogger _logger;
 
     private readonly int _standardSlaTime; 
     private readonly int _premiumSlaTime; 
@@ -17,7 +17,7 @@ internal class DataProcessor
         int standardSlaTime,
         int premiumSlaTime,
         int followUpActionTime,
-        Logger logger)
+        ILogger logger)
     {
         _standardSlaTime = standardSlaTime;
         _premiumSlaTime = premiumSlaTime;

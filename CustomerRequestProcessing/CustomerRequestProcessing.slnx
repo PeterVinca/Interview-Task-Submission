@@ -1,3 +1,4 @@
 <Solution>
+  <Project Path="../CustomerRequestProcessing.Tests/CustomerRequestProcessing.Tests.csproj" Id="90425a0f-ee39-4b37-aea0-1662efaecfbd" />
   <Project Path="CustomerRequestProcessing.csproj" />
 </Solution>

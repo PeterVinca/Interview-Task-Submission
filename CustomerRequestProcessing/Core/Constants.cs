@@ -1,10 +1,10 @@
 ﻿namespace CustomerRequestProcessing.Core;
-internal static class Constants
+public static class Constants
 {
-    internal static string DateTimeFormatForFile = "yyyy-MM-dd-HH-mm-ss";
-    internal static string DateTimeFormat = "yyyy-MM-dd HH:mm:ss";
-    internal static string DateTimeFormatISO8601 = "yyyy-MM-ddTHH:mm:sszzz";
-    internal static string DelimiterForJoiningInCsvFiles = " && ";
+    public static string DateTimeFormatForFile = "yyyy-MM-dd-HH-mm-ss";
+    public static string DateTimeFormat = "yyyy-MM-dd HH:mm:ss";
+    public static string DateTimeFormatISO8601 = "yyyy-MM-ddTHH:mm:sszzz";
+    public static string DelimiterForJoiningInCsvFiles = " && ";
 
     internal static class Configurations
     {
@@ -21,19 +21,19 @@ internal static class Constants
         internal static string FollowUpActionTime = "Sla:FollowUpActionTime";
     }
 
-    internal static class Errors
+    public static class Errors
     {
-        internal static string UnknownCustomer = "Unknown customer.";
-        internal static string UnknownTariff = "Unknown tariff.";
-        internal static string InvalidRequestData = "Invalid request data.";
-        internal static string InvalidCustomerData = "Invalid customer data.";
-        internal static string InvalidTariffData = "Invalid tariff data.";
-        internal static string UnpaidInvoice = "Unpaid invoice.";
+        public static string UnknownCustomer = "Unknown customer.";
+        public static string UnknownTariff = "Unknown tariff.";
+        public static string InvalidRequestData = "Invalid request data.";
+        public static string InvalidCustomerData = "Invalid customer data.";
+        public static string InvalidTariffData = "Invalid tariff data.";
+        public static string UnpaidInvoice = "Unpaid invoice.";
     }
 
-    internal static class ProcessedRequestMessages
+    public static class ProcessedRequestMessages
     {
-        internal static string ScheduleMeterUpgrade = "Schedule meter upgrade";
-        internal static string NoData = "NoData";
+        public static string ScheduleMeterUpgrade = "Schedule meter upgrade";
+        public static string NoData = "NoData";
     }
 }
