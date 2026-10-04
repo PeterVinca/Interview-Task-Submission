@@ -46,6 +46,7 @@ CodeCoverage/
 
 # MSBuild Binary and Structured Log
 *.binlog
+*.log
 
 # MSTest test Results
 [Tt]est[Rr]esult*/
@@ -55,3 +56,10 @@ CodeCoverage/
 *.VisualState.xml
 TestResult.xml
 nunit-*.xml
+
+#VS
+.vs/
+
+# Created files
+ProcessedRequests.csv
+OutputFiles/
