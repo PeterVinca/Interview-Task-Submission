@@ -20,7 +20,7 @@ internal class DataLoader
         {
             return (null, null, null);
         }
-        _logger.Info($"... loading completed");
+        _logger.Info($"... loading completed. Records: {tariffFileReadResult.Records.Count}. Errors: {tariffFileReadResult.Errors.Count}");
 
 
         _logger.Info($"Loading customer data from {Path.GetFileName(customerFile)} file");
@@ -29,7 +29,7 @@ internal class DataLoader
         {
             return (null, null, null);
         }
-        _logger.Info($"... loading completed");
+        _logger.Info($"... loading completed. Records: {customerFileReadResult.Records.Count}. Errors: {customerFileReadResult.Errors.Count}");
 
         _logger.Info($"Loading request data from {Path.GetFileName(requestFile)} file");
         FileReadResult<Request> requestFileReadResult = ReadRecords(new FileReader<Request, RequestMap>(new RequestValidator()), requestFile);
@@ -37,15 +37,19 @@ internal class DataLoader
         {
             return (null, null, null);
         }
-        _logger.Info($"... loading completed");
+        _logger.Info($"... loading completed. Records: {requestFileReadResult.Records.Count}. Errors: {requestFileReadResult.Errors.Count}");
 
         return (tariffFileReadResult, customerFileReadResult, requestFileReadResult);
     }
 
     internal FileReadResult<ProcessedRequest> LoadProcessedRequestData(string processedRequestsFilePath)
     {
+        _logger.Info($"Loading processed requests data from {Path.GetFileName(processedRequestsFilePath)} file");
+
         FileReadResult<ProcessedRequest> processedRequestFileReadResult = 
             ReadRecords(new FileReader<ProcessedRequest, ProcessedRequestMap>(null), processedRequestsFilePath, shouldCreateIfNotExists: true);
+
+        _logger.Info($"... loading completed.. Records: {processedRequestFileReadResult.Records.Count}.");
 
         return processedRequestFileReadResult;
     }

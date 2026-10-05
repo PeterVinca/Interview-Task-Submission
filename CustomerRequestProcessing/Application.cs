@@ -73,6 +73,8 @@ internal class Application
             _logger.Info($"Check the errors in error file generated in: {errorFileName}");
 
         _logger.Info($"Application finished at {DateTime.Now.ToString(Constants.DateTimeFormat)}");
+
+        Console.ReadLine();
     }
 
     private string WriteErrorFile(
