@@ -19,9 +19,18 @@ public class DataProcessor
         int followUpActionTime,
         ILogger logger)
     {
-        _standardSlaTime = standardSlaTime;
-        _premiumSlaTime = premiumSlaTime;
-        _followUpActionTime = followUpActionTime;
+        _standardSlaTime = standardSlaTime != -1 
+            ? Constants.DefaultSlaValues.StandardSla
+            : 48;
+
+        _premiumSlaTime = premiumSlaTime != -1 
+            ? Constants.DefaultSlaValues.PremiumSla
+            : 24;
+
+        _followUpActionTime = followUpActionTime != -1 
+            ? Constants.DefaultSlaValues.FollowUpActionTime
+            : 12;
+
         _logger = logger;
     }
 
@@ -41,6 +50,18 @@ public class DataProcessor
 
         foreach (var request in newRequestsToProcess)
         {
+            if (request == null)
+            {
+                _logger.Warn("Encountered a null request while processing. Skipping this entry.");
+                continue;
+            }
+
+            if (string.IsNullOrWhiteSpace(request.RequestId))
+            {
+                _logger.Warn("Encountered a request with no RequestId while processing. Skipping this entry.");
+                continue;
+            }
+
             var customer = customerData.Records.FirstOrDefault(c => !string.IsNullOrWhiteSpace(request.CustomerId) && c.CustomerId == request.CustomerId);
             var tariff = tariffData.Records.FirstOrDefault(t => !string.IsNullOrWhiteSpace(request.TargetTariffId) && t.TariffId == request?.TargetTariffId);
 
@@ -59,26 +80,31 @@ public class DataProcessor
         if (customer == null)
         {
             reasonMessages.Add(Constants.Errors.UnknownCustomer);
+            _logger.Warn($"No customer found for request {request.RequestId}.");
         }
 
         if (tariff == null)
         {
             reasonMessages.Add(Constants.Errors.UnknownTariff);
+            _logger.Warn($"No tariff found for request {request.RequestId}.");
         }
 
         if (IsRequestInvalid(request))
         {
             reasonMessages.Add(Constants.Errors.InvalidRequestData);
+            _logger.Warn($"Invalid request data for request {request.RequestId}.");
         }
 
         if (customer != null && IsCustomerInvalid(customer))
         {
             reasonMessages.Add(Constants.Errors.InvalidCustomerData);
+            _logger.Warn($"Invalid customer data for request {request.RequestId}.");
         }
 
         if (tariff != null && IsTariffInvalid(tariff))
         {
             reasonMessages.Add(Constants.Errors.InvalidTariffData);
+            _logger.Warn($"Invalid tariff data for request {request.RequestId}.");
         }
 
         if (customer != null && customer.HasUnpaidInvoice == true)
@@ -135,16 +161,16 @@ public class DataProcessor
 
     private bool IsCustomerInvalid(Customer customer)
     {
-        return string.IsNullOrWhiteSpace(customer.CustomerId)
-            || !customer.HasUnpaidInvoice.HasValue
+        // Checking CustomerId unnecessary because of predicate when getting the customer from request
+        return !customer.HasUnpaidInvoice.HasValue
             || !customer.SlaType.HasValue
             || !customer.MeterType.HasValue;
     }
 
     private bool IsTariffInvalid(Tariff tariff)
     {
-        return string.IsNullOrWhiteSpace(tariff.TariffId)
-            || !tariff.IsSmartMeterRequired.HasValue;
+        // Checking TariffId unnecessary because of predicate when getting the tariff from request
+        return !tariff.IsSmartMeterRequired.HasValue;
     }
 }
 

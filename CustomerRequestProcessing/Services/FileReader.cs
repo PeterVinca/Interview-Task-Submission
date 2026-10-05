@@ -9,7 +9,7 @@ namespace CustomerRequestProcessing.Services;
 
 interface IFileReader<TEntity> where TEntity : IEntity
 {
-    FileReadResult<TEntity> GetRecords(string filePath, bool checkIfFileExists = true, bool shouldCreateIfNotExists = false);
+    FileReadResult<TEntity> GetRecords(string filePath, bool shouldCreateIfNotExists = false);
 }
 
 internal class FileReader<TEntity, TMapper> : IFileReader<TEntity>
@@ -23,16 +23,17 @@ internal class FileReader<TEntity, TMapper> : IFileReader<TEntity>
         _validator = validator;
     }
 
-    public FileReadResult<TEntity> GetRecords(string filePath, bool checkIfFileExists = true, bool shouldCreateIfNotExists = false)
+    public FileReadResult<TEntity> GetRecords(string filePath, bool shouldCreateIfNotExists = false)
     {
-        if (checkIfFileExists && !File.Exists(filePath))
-        {
-            throw new FileNotFoundException($"File path: '{filePath}'");
-        }
-
         if (shouldCreateIfNotExists && !File.Exists(filePath))
         {
             File.Create(filePath).Dispose();
+            return new FileReadResult<TEntity>(new List<TEntity>(), new List<ValidationError>());
+        }
+
+        if (!File.Exists(filePath))
+        {
+            throw new FileNotFoundException($"File path: '{filePath}'");
         }
 
         var config = new CsvConfiguration(CultureInfo.InvariantCulture)
@@ -80,18 +81,17 @@ internal class FileReader<TEntity, TMapper> : IFileReader<TEntity>
                     }
                 }
 
-                //if (!validationErrors.Any())
-                //{
-                    records.Add(entity);
-                //}
+                records.Add(entity);
             }
             catch (CsvHelper.MissingFieldException ex)
             {
-                errors.Add(new ValidationError(csv.Context.Parser.Row, ex.Message, fileName));
+                var msg = $"Missing field in '{csv.Context.Parser.RawRecord.Replace("\n", "")}' row data. Check the file.";
+                errors.Add(new ValidationError(csv.Context.Parser.Row, msg, fileName));
             }
             catch (TypeConverterException ex)
             {
-                errors.Add(new ValidationError(csv.Context.Parser.Row, ex.Message, fileName));
+                var msg = $"Type conversion failed on '{csv.Context.Parser.RawRecord.Replace("\n", "")}' row data. Check the file.";
+                errors.Add(new ValidationError(csv.Context.Parser.Row, msg, fileName));
             }
             catch (BadDataException ex)
             {

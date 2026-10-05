@@ -1,4 +1,5 @@
 ﻿using CsvHelper.Configuration;
+using System.Formats.Tar;
 
 namespace CustomerRequestProcessing.Core.Entities
 {
@@ -28,6 +29,9 @@ namespace CustomerRequestProcessing.Core.Entities
         }
     }
 
+    /// <summary>
+    /// Validates a Request entity to ensure that required fields are present and valid.
+    /// </summary>
     public sealed class TariffValidator : IEntityValidator<Tariff>
     {
         public IEnumerable<string> Validate(Tariff tariff)
@@ -39,7 +43,7 @@ namespace CustomerRequestProcessing.Core.Entities
 
             if (!tariff.IsSmartMeterRequired.HasValue)
             {
-                yield return "IsSmartMeterRequired has no value.";
+                yield return "RequiresSmartMeter has no value.";
             }
         }
     }

@@ -33,7 +33,17 @@ public class Logger : ILogger
 
         File.AppendAllText(_logFile, line + Environment.NewLine);
 
+        var originalColor = Console.ForegroundColor;
+        Console.ForegroundColor = level switch
+        {
+            "INFO" => ConsoleColor.Green,
+            "WARN" => ConsoleColor.Yellow,
+            "ERROR" => ConsoleColor.Red,
+            _ => Console.ForegroundColor
+        };
         if (!onlyToFile)
             Console.WriteLine(line);
+
+        Console.ForegroundColor = originalColor;
     }
 }

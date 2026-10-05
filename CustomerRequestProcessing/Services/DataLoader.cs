@@ -14,41 +14,49 @@ internal class DataLoader
 
     internal (FileReadResult<Tariff>? tariffData, FileReadResult<Customer>? customerData, FileReadResult<Request>? requestData) LoadRequestData(string tariffFile, string customerFile, string requestFile)
     {
-        FileReadResult<Tariff> tariffFileReadResult = ReadRecords(new FileReader<Tariff, TariffMap>(null), tariffFile);
+        _logger.Info($"Loading tariff data from {Path.GetFileName(tariffFile)} file");
+        FileReadResult<Tariff> tariffFileReadResult = ReadRecords(new FileReader<Tariff, TariffMap>(new TariffValidator()), tariffFile);
         if (tariffFileReadResult == null)
         {
             return (null, null, null);
         }
+        _logger.Info($"... loading completed");
 
-        FileReadResult<Customer> customerFileReadResult = ReadRecords(new FileReader<Customer, CustomerMap>(null), customerFile);
+
+        _logger.Info($"Loading customer data from {Path.GetFileName(customerFile)} file");
+        FileReadResult<Customer> customerFileReadResult = ReadRecords(new FileReader<Customer, CustomerMap>(new CustomerValidator()), customerFile);
         if (customerFileReadResult == null)
         {
             return (null, null, null);
         }
+        _logger.Info($"... loading completed");
 
-        FileReadResult<Request> requestFileReadResult = ReadRecords(new FileReader<Request, RequestMap>(null), requestFile);
+        _logger.Info($"Loading request data from {Path.GetFileName(requestFile)} file");
+        FileReadResult<Request> requestFileReadResult = ReadRecords(new FileReader<Request, RequestMap>(new RequestValidator()), requestFile);
         if (requestFileReadResult == null)
         {
             return (null, null, null);
         }
+        _logger.Info($"... loading completed");
 
         return (tariffFileReadResult, customerFileReadResult, requestFileReadResult);
     }
 
     internal FileReadResult<ProcessedRequest> LoadProcessedRequestData(string processedRequestsFilePath)
     {
-        FileReadResult<ProcessedRequest> processedRequestFileReadResult = ReadRecords(new FileReader<ProcessedRequest, ProcessedRequestMap>(null), processedRequestsFilePath);
+        FileReadResult<ProcessedRequest> processedRequestFileReadResult = 
+            ReadRecords(new FileReader<ProcessedRequest, ProcessedRequestMap>(null), processedRequestsFilePath, shouldCreateIfNotExists: true);
 
         return processedRequestFileReadResult;
     }
 
-    private FileReadResult<TEntity> ReadRecords<TEntity>(IFileReader<TEntity> fileReader, string filePath) where TEntity : IEntity
+    private FileReadResult<TEntity> ReadRecords<TEntity>(IFileReader<TEntity> fileReader, string filePath, bool shouldCreateIfNotExists = false) where TEntity : IEntity
     {
         FileReadResult<TEntity> result;
 
         try
         {
-            result = fileReader.GetRecords(filePath);
+            result = fileReader.GetRecords(filePath, shouldCreateIfNotExists);
         }
         catch (FileNotFoundException ex)
         {

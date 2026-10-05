@@ -5,6 +5,7 @@ public static class Constants
     public static string DateTimeFormat = "yyyy-MM-dd HH:mm:ss";
     public static string DateTimeFormatISO8601 = "yyyy-MM-ddTHH:mm:sszzz";
     public static string DelimiterForJoiningInCsvFiles = " && ";
+    public static string DefaultErrorFilePath = @"./Files/OutputFiles/";
 
     internal static class Configurations
     {
@@ -14,7 +15,7 @@ public static class Constants
         internal static string RequestInputFile = "FilePaths:Input:RequestFile";
         internal static string TariffInputFile = "FilePaths:Input:TariffFile";
 
-        internal static string OutputErrorFile = "FilePaths:Output:ErrorFile";
+        internal static string OutputErrorFilePath = "FilePaths:Output:ErrorFilePath";
 
         internal static string PremiumSla = "Sla:Premium";
         internal static string StandardSla = "Sla:Standard";
@@ -35,5 +36,12 @@ public static class Constants
     {
         public static string ScheduleMeterUpgrade = "Schedule meter upgrade";
         public static string NoData = "NoData";
+    }
+
+    public static class DefaultSlaValues
+    {
+        public static int StandardSla = 48;
+        public static int PremiumSla = 24;
+        public static int FollowUpActionTime = 12;
     }
 }

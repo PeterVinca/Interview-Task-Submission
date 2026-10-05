@@ -33,6 +33,9 @@ namespace CustomerRequestProcessing.Core.Entities
         }
     }
 
+    /// <summary>
+    /// Validates a Request entity to ensure that required fields are present and valid.
+    /// </summary>
     public sealed class RequestValidator : IEntityValidator<Request>
     {
         public IEnumerable<string> Validate(Request request)
@@ -42,20 +45,20 @@ namespace CustomerRequestProcessing.Core.Entities
                 yield return "RequestId is required.";
             }
 
-            //if (string.IsNullOrWhiteSpace(request.CustomerId))
-            //{
-            //    yield return "CustomerId is required.";
-            //}
+            if (string.IsNullOrWhiteSpace(request.CustomerId))
+            {
+                yield return "CustomerId is required.";
+            }
 
-            //if (string.IsNullOrWhiteSpace(request.TargetTariffId))
-            //{
-            //    yield return "TargetTariffId is required.";
-            //}
+            if (string.IsNullOrWhiteSpace(request.TargetTariffId))
+            {
+                yield return "TargetTariffId is required.";
+            }
 
-            //if (!request.RequestedAt.HasValue)
-            //{
-            //    yield return "RequestedAt is required.";
-            //}
+            if (string.IsNullOrWhiteSpace(request.RequestedAt))
+            {
+                yield return "RequestedAtISO8601 has no value.";
+            }
         }
     }
 }

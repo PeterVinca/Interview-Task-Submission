@@ -70,7 +70,7 @@ internal class Application
 
         _logger.Info($"Processing data finished..."); 
         if (!string.IsNullOrWhiteSpace(errorFileName))
-            _logger.Info($"Found some errors when reading the input files. Check the errors in error file generated in: {errorFileName}");
+            _logger.Info($"Check the errors in error file generated in: {errorFileName}");
 
         _logger.Info($"Application finished at {DateTime.Now.ToString(Constants.DateTimeFormat)}");
     }
@@ -85,7 +85,9 @@ internal class Application
         if (!tariffErrors.Any() && !customerErrors.Any() && !requestErrors.Any())
             return string.Empty;
 
-        GetConfigurationValue(Constants.Configurations.OutputErrorFile, out var outputErrorFilePath);
+        _logger.Warn($"Found some errors when reading the input files");
+
+        GetConfigurationValue(Constants.Configurations.OutputErrorFilePath, out var outputErrorFilePath, Constants.DefaultErrorFilePath);
 
         var fileName = $"{outputErrorFilePath}ErrorFile_{timeAtStart.ToString(Constants.DateTimeFormatForFile)}.csv";
 
@@ -99,12 +101,12 @@ internal class Application
         return fileName;
     }
 
-    private bool GetConfigurationValue(string key, out string value)
+    private bool GetConfigurationValue(string key, out string value, string defaultValue = "")
     {
         value = _configuration[key]!;
         if (string.IsNullOrWhiteSpace(value))
         {
-            value = string.Empty;
+            value = defaultValue;
             var fileName = key.Split(':').Last();
             _logger.Error($"{fileName} path is not configured.");
             return false;
@@ -115,7 +117,8 @@ internal class Application
     private void GetConfigurationIntValue(string key, out int value)
     {
         var valueString = _configuration[key]!;
-        if (int.TryParse(valueString, out int parsedValue))
+
+        if (int.TryParse(valueString, out int parsedValue) || parsedValue < 0)
         {
             value = parsedValue;
         }
