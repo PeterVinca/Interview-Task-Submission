@@ -41,8 +41,8 @@ public class DataProcessor
 
         foreach (var request in newRequestsToProcess)
         {
-            var customer = customerData.Records.FirstOrDefault(c => c.CustomerId == request.CustomerId);
-            var tariff = tariffData.Records.FirstOrDefault(t => t.TariffId == request?.TargetTariffId);
+            var customer = customerData.Records.FirstOrDefault(c => !string.IsNullOrWhiteSpace(request.CustomerId) && c.CustomerId == request.CustomerId);
+            var tariff = tariffData.Records.FirstOrDefault(t => !string.IsNullOrWhiteSpace(request.TargetTariffId) && t.TariffId == request?.TargetTariffId);
 
             var processedRequest = ProcessedRequest(request, customer, tariff);
             currentlyProcessedRequests.Add(processedRequest);
@@ -55,8 +55,6 @@ public class DataProcessor
     private ProcessedRequest ProcessedRequest(Request request, Customer customer, Tariff tariff)
     {
         var reasonMessages = new List<string>();
-        var followUpActionMessages = new List<string>();
-
 
         if (customer == null)
         {
