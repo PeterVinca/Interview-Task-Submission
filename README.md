@@ -17,6 +17,7 @@ Application can be run from provided zip file; and build and run with provided s
 
 ## Application 
 Target framework is .Net 10, sdk is .Net 10.0.401
+
 Application uses appsettings.json where are stored values needed for the application, such as path to input files, where error output file should be created (if error found when reading files).  
 Application uses:
 - CsvHelper
