@@ -45,3 +45,7 @@ The implementation converts the input timestamp to the Europe/Vienna time zone u
 
 ### Processed request
 Processing requests only once is solved using generated processed request file where the information about processed request are stored. Also, processed request file is used for as result file where additional information are stored - if approved or rejected; reason; due date; and follow-up action 
+
+### Errors
+Missing a header; missing file → stop  immediately.
+Issue with reading a row → add Validation Error for that row and continue.(such data will be missing and that may result in requests being processed as rejected)
