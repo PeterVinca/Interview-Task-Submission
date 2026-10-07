@@ -48,4 +48,5 @@ Processing requests only once is solved using generated processed request file w
 
 ### Errors
 Missing a header; missing file → stop  immediately.
+
 Issue with reading a row → add Validation Error for that row and continue.(such data will be missing and that may result in requests being processed as rejected)
